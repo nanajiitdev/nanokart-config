@@ -1,0 +1,201 @@
+﻿####################################################
+# Application
+####################################################
+
+spring:
+  application:
+    name: gateway-service
+
+  ####################################################
+  # Gateway
+  ####################################################
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+
+          ####################################################
+          # Gateway Discovery
+          ####################################################
+
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
+          ####################################################
+          # Global CORS
+          ####################################################
+
+          globalcors:
+            add-to-simple-url-handler-mapping: true
+            cors-configurations:
+              '[/**]':
+                allowed-origins:
+                  - http://localhost:5173
+                allowed-methods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowed-headers: '*'
+                allow-credentials: true
+
+          ####################################################
+          # Gateway Routes
+          ####################################################
+
+          routes:
+
+            # ============================
+            # AUTH SERVICE
+            # ============================
+
+            - id: auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/auth/**
+
+            # ============================
+            # USER APIs
+            # ============================
+
+            - id: user-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/user/**
+
+            # ============================
+            # PRODUCT APIs
+            # ============================
+
+            - id: product-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/products/**
+
+            # ============================
+            # ORDER SERVICE
+            # ============================
+
+            - id: order-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/api/orders/**
+
+            # ============================
+            # PAYMENT SERVICE
+            # ============================
+
+            - id: payment-service
+              uri: lb://PAYMENT-SERVICE
+              predicates:
+                - Path=/api/payments/**
+
+            # ============================
+            # INVENTORY SERVICE
+            # ============================
+
+            - id: inventory-service
+              uri: lb://INVENTORY-SERVICE
+              predicates:
+                - Path=/api/inventory/**
+
+            # ============================
+            # DELIVERY SERVICE
+            # ============================
+
+            - id: delivery-service
+              uri: lb://DELIVERY-SERVICE
+              predicates:
+                - Path=/api/delivery/**
+
+            # ============================
+            # CUSTOMER PROFILE
+            # ============================
+
+            - id: customer-profile
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/customer/**
+
+            # ============================
+            # CART SERVICE
+            # ============================
+
+            - id: cart-service
+              uri: lb://CART-SERVICE
+              predicates:
+                - Path=/api/cart/**
+
+            ####################################################
+            # GOOGLE OAUTH2
+            ####################################################
+
+            - id: auth-oauth2-authorization
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/oauth2/authorization/**
+
+            - id: auth-oauth2-callback
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/login/oauth2/**
+
+  ####################################################
+  # Reactor Context Propagation
+  ####################################################
+
+  reactor:
+    context-propagation: auto
+
+####################################################
+# Server
+####################################################
+
+server:
+  port: 8080
+
+####################################################
+# Eureka
+####################################################
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+
+####################################################
+# Actuator + Tracing
+####################################################
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+
+####################################################
+# Logging
+####################################################
+
+logging:
+  pattern:
+    correlation: '[${spring.application.name:},traceId=%X{traceId:-},spanId=%X{spanId:-}]'
+
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty.http.client: DEBUG
