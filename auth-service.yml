@@ -3,10 +3,9 @@ spring:
     name: auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/jwt_demo
-    username: postgres
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/jwt_demo
+    username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -14,7 +13,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
   security:
     oauth2:
       client:
@@ -22,16 +20,18 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-
+            scope:
+              - openid
+              - profile
+              - email      
 server:
   port: 8081
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
-
   instance:
     prefer-ip-address: true
