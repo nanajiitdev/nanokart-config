@@ -3,7 +3,7 @@
     name: delivery-service
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:29092
     consumer:
       group-id: delivery-group-v2
       auto-offset-reset: earliest
@@ -19,7 +19,7 @@
       observation-enabled: true
 
   rabbitmq:
-    host: localhost
+    host: rabbitmq
     port: 5672
     username: guest
     password: guest
@@ -47,16 +47,16 @@ server:
 # Service URLs
 order:
   service:
-    url: http://localhost:8083
+    url: http://nanokart-order-service:8083
 
 user:
   service:
-    url: http://localhost:8083
+    url: http://nanokart-auth-service:8081
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://nanokart-eureka-server:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
 
