@@ -17,7 +17,7 @@
         format_sql: true
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:29092
 
     consumer:
       group-id: inventory-group
@@ -58,13 +58,12 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://nanokart-eureka-server:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
 
   instance:
     prefer-ip-address: true
-    ip-address: 192.168.1.49
     instance-id: '${spring.application.name}:${server.port}'
 
 management:
