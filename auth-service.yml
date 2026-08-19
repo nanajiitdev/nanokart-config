@@ -25,7 +25,7 @@ spring:
               - openid
               - profile
               - email
-	    redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"  
+            redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
 server:
   port: 8081
   forward-headers-strategy: framework
@@ -37,3 +37,5 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: true
+
+
