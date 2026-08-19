@@ -24,7 +24,8 @@ spring:
             scope:
               - openid
               - profile
-              - email      
+              - email
+	    redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"  
 server:
   port: 8081
   forward-headers-strategy: framework
